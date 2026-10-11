@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure NFT Deal Terminal</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #0f1015);
+            --text-color: var(--tg-theme-text-color, #ffffff);
+            --hint-color: var(--tg-theme-hint-color, #707579);
+            --button-color: var(--tg-theme-button-color, #2481cc);
+            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
+            --card-bg: #181920;
+            --accent: #00ff88;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+            background: linear-gradient(45deg, #00ff88, #00b8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .row span:last-child {
+            font-weight: 600;
+        }
+        .instructions {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--hint-color);
+            background: rgba(255,255,255,0.03);
+            padding: 14px;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: var(--button-color);
+            color: var(--button-text-color);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: opacity 0.2s;
+            margin-top: 10px;
+        }
+        .btn:active {
+            opacity: 0.8;
+        }
+        .btn-danger {
+            background: #ff3b30;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Escrow Terminal</h1>
+            <p style="font-size: 12px; color: var(--hint-color);">Безопасная сделка через систему Telegram</p>
+        </div>
+
+        <div class="card" id="deal-info">
+            <div class="row">
+                <span>Лот:</span>
+                <span id="nft-name">Загрузка...</span>
+            </div>
+            <div class="row">
+                <span>Сумма резерва:</span>
+                <span id="price" style="color: var(--accent);">0</span>
+            </div>
+            <div class="row">
+                <span>Статус:</span>
+                <span style="color: #ff9500;">Ожидает принятия</span>
+            </div>
+        </div>
+
+        <div class="instructions" id="instructions-box">
+            <b>Инструкция по завершению:</b><br>
+            1. Передайте подарок строго пользователю: <span id="receiver" style="color: #fff; font-weight: bold;">@MikUSDT</span><br>
+            2. Подтвердите отправку в этом терминале. Деньги мгновенно поступят на ваш баланс Stars.
+        </div>
+
+        <button class="btn" id="accept-btn" onclick="acceptDeal()">Принять сделку и начать</button>
+        <button class="btn btn-danger" id="decline-btn" onclick="declineDeal()">Отклонить</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Парсим offer_id из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const offerId = urlParams.get('offer_id');
+
+        // Здесь можно сделать fetch-запрос к твоему бэкенду за деталями оффера по offerId
+        // Для примера выставим заглушки или данные из параметров
+        document.getElementById('nft-name').innerText = "PlushPepe #1111";
+        document.getElementById('price').innerText = "500 ⭐️";
+
+        function acceptDeal() {
+            tg.HapticFeedback.impactOccurred('heavy');
+            alert("Сделка принята! Следуйте инструкциям по передаче подарка.");
+            tg.close();
+        }
+
+        function declineDeal() {
+            tg.HapticFeedback.notificationOccurred('error');
+            if(confirm("Вы уверены, что хотите отклонить сделку?")) {
+                tg.close();
+            }
+        }
+    </script>
+</body>
+</html>
