@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Telegram</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Telegram Market</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root{
@@ -14,57 +14,200 @@
     --tg-link: var(--tg-theme-link-color, #6ab3f3);
     --tg-button: var(--tg-theme-button-color, #5288c1);
     --tg-button-text: var(--tg-theme-button-text-color, #ffffff);
+    --safe-bottom: var(--tg-safe-area-inset-bottom, 0px);
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0;background:var(--tg-bg);color:var(--tg-text);
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+  html,body{
+    background:var(--tg-bg);
+    color:var(--tg-text);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
-    font-size:15px;line-height:1.4}
-  .wrap{padding:16px;max-width:520px;margin:0 auto}
-  .bubble{
+    font-size:15px;
+    line-height:1.4;
+    min-height:100vh;
+  }
+  .wrap{
+    padding:16px;
+    padding-bottom:calc(24px + var(--safe-bottom));
+    max-width:520px;
+    margin:0 auto;
+    width:100%;
+  }
+
+  /* ── card ── */
+  .card{
     background:var(--tg-secondary);
-    border-radius:18px;
-    padding:14px 16px;
-    margin-bottom:12px;
-    box-shadow:0 1px 0 rgba(0,0,0,.15);
+    border-radius:20px;
+    padding:18px 18px 14px;
+    margin-bottom:14px;
+    box-shadow:0 2px 12px rgba(0,0,0,.18);
+    border:1px solid rgba(255,255,255,.04);
   }
-  .bubble .head{
+  .card-head{
     display:flex;align-items:center;gap:8px;
-    font-size:13px;color:var(--tg-hint);margin-bottom:10px;
+    font-size:13px;color:var(--tg-hint);
+    margin-bottom:14px;
+    letter-spacing:.2px;
   }
-  .bubble .head b{color:var(--tg-text)}
+  .card-head .badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    background:rgba(82,136,193,.15);
+    color:var(--tg-link);
+    border-radius:6px;
+    padding:2px 8px;
+    font-size:11px;
+    font-weight:600;
+    margin-left:auto;
+  }
+
+  /* ── amount ── */
   .amount{
-    font-size:24px;font-weight:700;margin:4px 0 10px;
-    display:flex;align-items:center;gap:6px;
+    font-size:28px;font-weight:800;
+    display:flex;align-items:baseline;gap:6px;
+    margin:2px 0 16px;
+    letter-spacing:-.5px;
   }
-  .amount .curr{font-weight:500;color:var(--tg-hint);font-size:15px;margin-left:2px}
-  .row{display:flex;justify-content:space-between;padding:9px 0;
-    border-bottom:1px solid rgba(255,255,255,.06)}
+  .amount .curr{
+    font-weight:500;
+    color:var(--tg-hint);
+    font-size:14px;
+    margin-left:2px;
+    letter-spacing:0;
+  }
+
+  /* ── rows ── */
+  .row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    font-size:14px;
+  }
   .row:last-child{border-bottom:none}
-  .row .k{color:var(--tg-hint)}
-  .row .v{font-weight:600;max-width:60%;text-align:right;word-break:break-all}
+  .row .k{color:var(--tg-hint);display:flex;align-items:center;gap:6px}
+  .row .v{
+    font-weight:600;
+    max-width:60%;
+    text-align:right;
+    word-break:break-all;
+    font-variant-numeric:tabular-nums;
+  }
+  .row .v.mono{
+    font-family:"SF Mono",SFMono-Regular,ui-monospace,Menlo,monospace;
+    font-size:13px;
+    color:var(--tg-link);
+  }
+
+  /* ── status ── */
+  .status{
+    display:inline-flex;align-items:center;gap:6px;
+    color:#ffb432;
+    font-weight:600;
+    font-size:13px;
+  }
+  .status::after{
+    content:'';
+    width:6px;height:6px;
+    background:#ffb432;
+    border-radius:50%;
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1)}
+    50%{opacity:.4;transform:scale(.8)}
+  }
+
+  /* ── instruction ── */
+  .steps{counter-reset:step;padding:0;list-style:none}
+  .steps li{
+    position:relative;
+    padding:8px 0 8px 32px;
+    font-size:14px;
+    counter-increment:step;
+    border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{
+    content:counter(step);
+    position:absolute;left:0;top:9px;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:rgba(82,136,193,.18);
+    color:var(--tg-link);
+    font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .steps li b{color:var(--tg-text)}
+
+  /* ── buttons ── */
   .btn{
     display:flex;align-items:center;justify-content:center;gap:8px;
-    width:100%;padding:14px;border:none;border-radius:12px;
-    background:var(--tg-button);color:var(--tg-button-text);
-    font-size:16px;font-weight:600;cursor:pointer;
-    margin-top:8px;text-decoration:none;
+    width:100%;padding:15px;
+    border:none;border-radius:14px;
+    font-size:16px;font-weight:600;
+    cursor:pointer;
+    text-decoration:none;
     font-family:inherit;
+    transition:transform .1s ease,opacity .1s ease;
+    -webkit-user-select:none;user-select:none;
+  }
+  .btn:active{transform:scale(.97);opacity:.85}
+  .btn.primary{
+    background:linear-gradient(135deg,var(--tg-button) 0%,#3d6f9e 100%);
+    color:var(--tg-button-text);
+    box-shadow:0 4px 16px rgba(82,136,193,.3);
+    margin-top:4px;
   }
   .btn.secondary{
-    background:var(--tg-secondary);color:var(--tg-text);
+    background:var(--tg-secondary);
+    color:var(--tg-text);
+    border:1px solid rgba(255,255,255,.07);
+    margin-top:10px;
   }
+
+  /* ── warning ── */
   .warn{
-    display:flex;gap:8px;align-items:flex-start;
-    background:rgba(255,180,50,.12);
+    display:flex;gap:10px;align-items:flex-start;
+    background:rgba(255,180,50,.08);
+    border:1px solid rgba(255,180,50,.15);
     color:#ffb432;
-    border-radius:12px;padding:12px;margin-top:12px;
-    font-size:13px;line-height:1.45;
+    border-radius:14px;
+    padding:14px;
+    margin-top:14px;
+    font-size:13px;
+    line-height:1.5;
   }
   .warn b{color:#ffd07a}
-  ol{margin:0;padding-left:20px}
-  ol li{padding:3px 0}
-  .footer{color:var(--tg-hint);font-size:12px;text-align:center;margin:18px 0 4px}
-  .loading{color:var(--tg-hint);text-align:center;padding:40px 0}
+
+  /* ── footer ── */
+  .footer{
+    color:var(--tg-hint);
+    font-size:11px;
+    text-align:center;
+    margin:20px 0 8px;
+    letter-spacing:.3px;
+    text-transform:uppercase;
+    opacity:.7;
+  }
+
+  .loading{
+    color:var(--tg-hint);
+    text-align:center;
+    padding:60px 0;
+    font-size:14px;
+  }
+
+  /* ── responsive ── */
+  @media (max-width:360px){
+    html{font-size:14px}
+    .wrap{padding:12px}
+    .card{padding:14px 14px 10px;border-radius:16px}
+    .amount{font-size:24px}
+    .btn{padding:13px;font-size:15px;border-radius:12px}
+  }
+  @media (min-width:600px){
+    .wrap{padding:24px}
+    .card{padding:22px}
+    .amount{font-size:32px}
+  }
 </style>
 </head>
 <body>
@@ -73,31 +216,56 @@
 
   <div id="content" style="display:none">
 
-    <div class="bubble">
-      <div class="head">
+    <div class="card">
+      <div class="card-head">
         <tg-emoji emoji-id="6028346797368283073">✈️</tg-emoji>
-        <b>Telegram</b> · <span>Гарантийная система</span>
+        <span><b>Telegram</b> · Гарантийная система</span>
+        <span class="badge">Escrow</span>
       </div>
       <div class="amount" id="amount">—</div>
-      <div class="row"><span class="k">Ордер</span><span class="v" id="order">—</span></div>
-      <div class="row"><span class="k">NFT</span><span class="v" id="nft">—</span></div>
-      <div class="row"><span class="k">Получатель</span><span class="v" id="receiver">—</span></div>
-      <div class="row"><span class="k">Статус</span><span class="v">Ожидает передачи</span></div>
+      <div class="row">
+        <span class="k">
+          <tg-emoji emoji-id="5877536313623711363">📄</tg-emoji>
+          Ордер
+        </span>
+        <span class="v mono" id="order">—</span>
+      </div>
+      <div class="row">
+        <span class="k">
+          <tg-emoji emoji-id="6032644646587338669">🎁</tg-emoji>
+          NFT
+        </span>
+        <span class="v" id="nft">—</span>
+      </div>
+      <div class="row">
+        <span class="k">
+          <tg-emoji emoji-id="5879770735999717115">👤</tg-emoji>
+          Получатель
+        </span>
+        <span class="v" id="receiver">—</span>
+      </div>
+      <div class="row">
+        <span class="k">
+          <tg-emoji emoji-id="6030537007350944596">🛡</tg-emoji>
+          Статус
+        </span>
+        <span class="v status" id="statusText">Ожидает передачи</span>
+      </div>
     </div>
 
-    <div class="bubble">
-      <div class="head">
+    <div class="card">
+      <div class="card-head">
         <tg-emoji emoji-id="6030848053177486888">❗️</tg-emoji>
-        <b>Инструкция</b>
+        <span><b>Инструкция</b></span>
       </div>
-      <ol>
+      <ol class="steps">
         <li>Откройте чат с получателем</li>
         <li>Передайте подарок <b id="nft2">—</b></li>
         <li>Вернитесь сюда и нажмите «Подтвердить»</li>
       </ol>
     </div>
 
-    <a class="btn" id="openChat">
+    <a class="btn primary" id="openChat">
       <tg-emoji emoji-id="6039391078136681499">🔗</tg-emoji>
       Открыть чат с получателем
     </a>
@@ -141,9 +309,9 @@
   }
 
   function render(d) {
-    const currLabel = d.c === "stars" ? "⭐️ Stars" : "Gram";
+    const currLabel = d.c === "stars" ? "Stars" : "Gram";
     document.getElementById("amount").innerHTML =
-      '<tg-emoji emoji-id="6037175527846975726">⭐️</tg-emoji> ' +
+      '<tg-emoji emoji-id="5874948844935974490">⭐️</tg-emoji> ' +
       d.p +
       '<span class="curr">' + currLabel + '</span>';
     document.getElementById("order").textContent = "#TG-" + d.o;
@@ -170,7 +338,7 @@
   document.getElementById("confirmBtn").addEventListener("click", () => {
     tg?.showAlert(
       "Внимание!\n\nСледуйте инструкции, чтобы не потерять подарок и получить оплату.",
-      () => { /* можно закрыть webapp: tg?.close(); */ }
+      () => { /* tg?.close(); */ }
     );
   });
 </script>
